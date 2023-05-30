@@ -3,7 +3,7 @@
 # Programa en MARS - Assembler 32 bits
 
 .data
-    report_filename: .asciiz "Report.log"
+    report_filename: .asciiz "C:/Usuarios/Asus/documentos/ProgAssembly/Report.log"
     filename_data: .asciiz "data.*"
     filename_rules: .asciiz "Parsing_Rules.config"
     buffer: .space 200
