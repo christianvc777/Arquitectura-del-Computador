@@ -104,7 +104,7 @@ main:
             	blt $t1, $s2, Inner_loop   # Repetir el bucle interno si no se han comparado todos los elementos
 
         	addi $t0, $t0, 1     # Incrementar el contador de elementos únicos
-        	blt $t0, $s2, loop   # Repetir el bucle externo si no se han procesado todos los elementos
+        	blt $t0, $s2, Loop   # Repetir el bucle externo si no se han procesado todos los elementos
 
     	move $v0, $t0    # Cargar el contador de elementos únicos en $v0
 
