@@ -1,3 +1,37 @@
+#Simulacion en MARS
+
+Logs:
+IP: 192.168.0.1, Username: user1, Date: 1641932400
+IP: 192.168.0.2, Username: user2, Date: 1641932500
+IP: 192.168.0.3, Username: user3, Date: 1641932600
+IP: 192.168.0.4, Username: user4, Date: 1641932700
+IP: 192.168.0.5, Username: user5, Date: 1641932800
+
+Parsing Rules:
+IP: 192.168.0.1, 192.168.0.3
+Username: user1, user3
+
+Sorted Logs:
+IP: 192.168.0.1, Username: user1, Date: 1641932400
+IP: 192.168.0.2, Username: user2, Date: 1641932500
+IP: 192.168.0.3, Username: user3, Date: 1641932600
+IP: 192.168.0.4, Username: user4, Date: 1641932700
+IP: 192.168.0.5, Username: user5, Date: 1641932800
+
+Deduplicated Logs:
+IP: 192.168.0.1, Username: user1, Date: 1641932400
+IP: 192.168.0.2, Username: user2, Date: 1641932500
+IP: 192.168.0.3, Username: user3, Date: 1641932600
+IP: 192.168.0.4, Username: user4, Date: 1641932700
+IP: 192.168.0.5, Username: user5, Date: 1641932800
+
+Alerts Triggered:
+IP: 192.168.0.1, Username: user1, Date: 1641932400
+IP: 192.168.0.3, Username: user3, Date: 1641932600
+
+
+#Simulacion Esperada
+
 Logs:
 IP: 192.168.0.1, Username: user1, Date: 1641932400
 IP: 192.168.0.2, Username: user2, Date: 1641932500
