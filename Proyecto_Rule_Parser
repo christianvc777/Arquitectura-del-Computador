@@ -1,3 +1,7 @@
+# Proyecto #3 - Rule Parser
+# Grupo: Sergio Cuellar, Renato Negrete y Cristian Vargas
+# Programa en MARS - Assembler 32 bits
+
 .data
     report_filename: .asciiz "Report.log"
     filename_data: .asciiz "data.*"
