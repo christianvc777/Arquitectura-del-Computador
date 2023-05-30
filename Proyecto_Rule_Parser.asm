@@ -124,6 +124,54 @@ main:
     li $a2, 200   # Tamaño de la tabla de alertas
     jal remove_duplicates
 
+write_alerts_to_file:
+    # Guardar los registros necesarios
+    addi $sp, $sp, -12
+    sw $ra, 0($sp)    # Guardar la dirección de retorno
+    sw $s0, 4($sp)    # Guardar el valor de $s0
+    sw $s1, 8($sp)    # Guardar el valor de $s1
+
+    move $s0, $a0     # Guardar la dirección de la tabla de alertas en $s0
+
+    li $v0, 13   # Cargar el número de llamada al sistema para abrir archivo
+    la $a0, report_filename   # Cargar la dirección del nombre del archivo
+    li $a1, 1    # Modo de apertura (escritura)
+    syscall
+
+    # Guardar el descriptor de archivo en $t0
+    move $t0, $v0
+
+    # Escribir las alertas en el archivo
+    li $t1, 0         # Inicializar el índice en 0
+
+    Loop2:
+        mul $t2, $t1, 8   # Multiplicar el índice por 8 para obtener el desplazamiento en bytes
+        add $t2, $s0, $t2   # Calcular la dirección del elemento actual en la tabla de alertas
+        lw $t3, 0($t2)    # Cargar la IP del elemento actual en $t3
+
+        # Escribir la IP en el archivo
+        move $a0, $t0     # Cargar el descriptor de archivo en $a0
+        move $a1, $t3     # Cargar la IP en $a1
+        jal write_ip_to_file
+
+        addi $t1, $t1, 1   # Incrementar el índice
+        blt $t1, $a2, Loop   # Repetir el bucle si no se han procesado todas las alertas
+
+    # Cerrar el archivo
+    li $v0, 16   # Cargar el número de llamada al sistema para cerrar archivo
+    move $a0, $t0     # Cargar el descriptor de archivo en $a0
+    syscall
+
+    # Restaurar los registros guardados
+    lw $ra, 0($sp)    # Cargar la dirección de retorno
+    lw $s0, 4($sp)    # Cargar el valor de $s0
+    lw $s1, 8($sp)    # Cargar el valor de $s1
+    addi $sp, $sp, 12  # Restaurar el puntero de pila
+
+    # Salir de la función y volver a la dirección de retorno
+    jr $ra
+
+
 generate_alerts_file:
     # Guardar los registros necesarios
     addi $sp, $sp, -12
@@ -136,10 +184,10 @@ generate_alerts_file:
 
     li $t0, 0         # Inicializar el contador de alarmas generadas en 0
 
-    Loop:
+    Loop1:
         li $t1, 0        # Inicializar el índice de comparación en 0
 
-        Inner_loop:
+        Inner_loop1:
             mul $t2, $t1, 8       # Multiplicar el índice por 8 para obtener el desplazamiento en bytes
             mul $t3, $t1, 8       # Multiplicar el índice por 8 para obtener el desplazamiento en bytes
             add $t2, $s1, $t2    # Calcular la dirección del elemento actual en la tabla de alertas
@@ -172,7 +220,7 @@ generate_alerts_file:
 
                 skip:
             addi $t1, $t1, 1   # Incrementar el índice de comparación
-            blt $t1, $a2, Inner_loop   # Repetir el bucle interno si no se han comparado todos los elementos
+            blt $t1, $a2, Inner_loop1   # Repetir el bucle interno si no se han comparado todos los elementos
 
         addi $t0, $t0, 1   # Incrementar el contador de alarmas generadas
 
