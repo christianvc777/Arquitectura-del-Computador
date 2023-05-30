@@ -4,8 +4,8 @@
 
 .data
     report_filename: .asciiz "C:/Usuarios/Asus/documentos/ProgAssembly/Report.log"
-    filename_data: .asciiz "C:/Usuarios/Asus/documentos/ProgAssembly/data.*"
-    filename_rules: .asciiz "Parsing_Rules.config"
+    filename_data: .asciiz "C:/Usuarios/Asus/documentos/ProgAssembly/data.231020221943"
+    filename_rules: .asciiz "C:/Usuarios/Asus/documentos/ProgAssembly/Parsing_Rules.config"
     buffer: .space 200
     logs_table: .space 2400  # Tabla de logs (IP, Username, Date)
     alerts_table: .space 1600  # Tabla de alertas (IP, Username)
