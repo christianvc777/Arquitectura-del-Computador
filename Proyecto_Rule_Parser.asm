@@ -7,10 +7,10 @@
     filename_data: .asciiz "data.*"
     filename_rules: .asciiz "Parsing_Rules.config"
     buffer: .space 200
-    logs_table: .space 200 * 12  # Tabla de logs (IP, Username, Date)
-    alerts_table: .space 200 * 8  # Tabla de alertas (IP, Username)
-    sorted_logs_table: .space 200 * 12  # Tabla de logs ordenada por fecha
-    alerts_triggered: .space 200 * 12  # Tabla de alarmas generadas
+    logs_table: .space 2400  # Tabla de logs (IP, Username, Date)
+    alerts_table: .space 1600  # Tabla de alertas (IP, Username)
+    sorted_logs_table: .space 2400  # Tabla de logs ordenada por fecha
+    alerts_triggered: .space 2400  # Tabla de alarmas generadas
 
 .text
 .globl main
@@ -63,6 +63,60 @@ main:
     la $a1, sorted_logs_table  # Cargar la dirección de la tabla de logs ordenada
     li $a2, 200   # Tamaño de la tabla de logs
     jal sort_logs
+
+    # Función para eliminar duplicados en un arreglo
+    remove_duplicates:
+    	# Guardar los registros necesarios
+    	addi $sp, $sp, -16
+    	sw $ra, 0($sp)   # Guardar la dirección de retorno
+    	sw $s0, 4($sp)   # Guardar el valor de $s0
+    	sw $s1, 8($sp)   # Guardar el valor de $s1
+    	sw $s2, 12($sp)  # Guardar el valor de $s2
+
+    	move $s0, $a0    # Guardar la dirección del arreglo en $s0
+    	move $s1, $a1    # Guardar la dirección del arreglo sin duplicados en $s1
+    	move $s2, $a2    # Guardar el tamaño del arreglo en $s2
+
+    	li $t0, 0        # Inicializar el contador de elementos únicos en 0
+
+    	Loop:
+        	li $t1, 0        # Inicializar el índice de comparación en 0
+
+        	Inner_loop:
+            	mul $t2, $t1, 4       # Multiplicar el índice por 4 para obtener el desplazamiento en bytes
+            	mul $t3, $t1, 4       # Multiplicar el índice por 4 para obtener el desplazamiento en bytes
+            	add $t2, $s0, $t2    # Calcular la dirección del elemento actual en el arreglo
+            	add $t3, $s0, $t3    # Calcular la dirección del elemento siguiente en el arreglo
+            	lw $t4, 0($t2)       # Cargar el elemento actual en $t4
+            	lw $t5, 0($t3)       # Cargar el elemento siguiente en $t5
+
+            	beq $t4, $t5, skip   # Saltar si el elemento actual es igual al siguiente
+
+            	# Copiar el elemento actual al arreglo sin duplicados
+            	mul $t6, $t0, 4       # Multiplicar el contador de elementos únicos por 4 para obtener el desplazamiento en bytes
+            	add $t6, $s1, $t6    # Calcular la dirección donde se debe copiar el elemento
+            	sw $t4, 0($t6)       # Copiar el elemento al arreglo sin duplicados
+
+            	addi $t0, $t0, 1     # Incrementar el contador de elementos únicos
+
+        skip:
+            	addi $t1, $t1, 1     # Incrementar el índice de comparación
+            	blt $t1, $s2, Inner_loop   # Repetir el bucle interno si no se han comparado todos los elementos
+
+        	addi $t0, $t0, 1     # Incrementar el contador de elementos únicos
+        	blt $t0, $s2, loop   # Repetir el bucle externo si no se han procesado todos los elementos
+
+    	move $v0, $t0    # Cargar el contador de elementos únicos en $v0
+
+   	# Restaurar los registros
+   	lw $ra, 0($sp)
+   	lw $s0, 4($sp)
+   	lw $s1, 8($sp)
+   	lw $s2, 12($sp)
+   	addi $sp, $sp, 16    # Liberar el espacio del stack
+   
+   	jr $ra    # Retornar a la dirección de retorno
+
 
  # Eliminar archivos duplicados en la tabla de alertas
     la $a0, alerts_table  # Cargar la dirección de la tabla de alertas
