@@ -124,6 +124,67 @@ main:
     li $a2, 200   # Tamaño de la tabla de alertas
     jal remove_duplicates
 
+generate_alerts_file:
+    # Guardar los registros necesarios
+    addi $sp, $sp, -12
+    sw $ra, 0($sp)    # Guardar la dirección de retorno
+    sw $s0, 4($sp)    # Guardar el valor de $s0
+    sw $s1, 8($sp)    # Guardar el valor de $s1
+
+    move $s0, $a0     # Guardar la dirección de la tabla de logs ordenada en $s0
+    move $s1, $a1     # Guardar la dirección de la tabla de alertas en $s1
+
+    li $t0, 0         # Inicializar el contador de alarmas generadas en 0
+
+    Loop:
+        li $t1, 0        # Inicializar el índice de comparación en 0
+
+        Inner_loop:
+            mul $t2, $t1, 8       # Multiplicar el índice por 8 para obtener el desplazamiento en bytes
+            mul $t3, $t1, 8       # Multiplicar el índice por 8 para obtener el desplazamiento en bytes
+            add $t2, $s1, $t2    # Calcular la dirección del elemento actual en la tabla de alertas
+            add $t3, $s1, $t3    # Calcular la dirección del elemento siguiente en la tabla de alertas
+            lw $t4, 0($t2)       # Cargar la IP del elemento actual en $t4
+            lw $t5, 0($t3)       # Cargar la IP del elemento siguiente en $t5
+
+            beq $t4, $t5, skip   # Saltar si la IP actual es igual a la IP siguiente
+
+            # Copiar la IP actual al archivo de alarmas generadas
+            li $v0, 13   # Cargar el número de llamada al sistema para abrir archivo
+            la $a0, alerts_triggered_filename   # Cargar la dirección del nombre del archivo
+            li $a1, 1    # Modo de apertura (escritura)
+            syscall
+
+            # Guardar el descriptor de archivo en $t6
+            move $t6, $v0
+
+            # Escribir la IP actual en el archivo de alarmas generadas
+            move $a0, $t6     # Cargar el descriptor de archivo en $a0
+            move $a1, $t4     # Cargar la IP actual en $a1
+            jal write_ip_to_file
+
+            # Cerrar el archivo de alarmas generadas
+            li $v0, 16   # Cargar el número de llamada al sistema para cerrar archivo
+            move $a0, $t6     # Cargar el descriptor de archivo en $a0
+            syscall
+
+            addi $t0, $t0, 1   # Incrementar el contador de alarmas generadas
+
+                skip:
+            addi $t1, $t1, 1   # Incrementar el índice de comparación
+            blt $t1, $a2, Inner_loop   # Repetir el bucle interno si no se han comparado todos los elementos
+
+        addi $t0, $t0, 1   # Incrementar el contador de alarmas generadas
+
+    # Restaurar los registros guardados
+    lw $ra, 0($sp)    # Cargar la dirección de retorno
+    lw $s0, 4($sp)    # Cargar el valor de $s0
+    lw $s1, 8($sp)    # Cargar el valor de $s1
+    addi $sp, $sp, 12  # Restaurar el puntero de pila
+
+    # Salir de la función y volver a la dirección de retorno
+    jr $ra
+
     # Generar archivo de alarmas generadas (Alerts_Triggered.log)
     la $a0, sorted_logs_table  # Cargar la dirección de la tabla de logs ordenada
     la $a1, alerts_table  # Cargar la dirección de la tabla de alertas
