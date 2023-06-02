@@ -1,0 +1,33 @@
+IP Y UNM - Parsing_Rules.config
+
+IP:19.8.58.61 - Repetido: 3 veces
+|ip:'19.8.58.61´|unm:'lcastaneda|tsp:'1666572594'|
+|ip:'19.8.58.61´|unm:'dgonzalez|tsp:'1666571970'|
+|ip:'19.8.58.61´|unm:'rrodriguez|tsp:'1666571816'|
+
+IP:180.79.179.146 - Repetido: 5 veces
+|ip:'180.79.179.146´|unm:'kcampo|tsp:'1666571994'|
+|ip:'180.79.179.146´|unm:'mcabrera|tsp:'1666572899'|
+|ip:'180.79.179.146´|unm:'dgonzalez|tsp:'1666571992'|
+|ip:'180.79.179.146´|unm:'ccelys|tsp:'1666572682'|
+|ip:'180.79.179.146´|unm:'ccelys|tsp:'1666571579'|
+
+IP:125.86.175.144 - Repetido: 4 veces
+|ip:'125.86.175.144´|unm:'lcastaneda|tsp:'1666572985'|
+|ip:'125.86.175.144´|unm:'kcampo|tsp:'1666571644'|
+|ip:'125.86.175.144´|unm:'mcabrera|tsp:'1666571706'|
+|ip:'125.86.175.144´|unm:'kcampo|tsp:'1666571191'|
+
+IP:185.99.75.7 - Repetido: 6 veces
+|ip:'185.99.75.7´|unm:'rrodriguez|tsp:'1666572062'|
+|ip:'185.99.75.7´|unm:'kcampo|tsp:'1666571989'|
+|ip:'185.99.75.7´|unm:'mcabrera|tsp:'1666571122'|
+|ip:'185.99.75.7´|unm:'salba|tsp:'1666572831'|
+|ip:'185.99.75.7´|unm:'lcastaneda|tsp:'1666572747'|
+|ip:'185.99.75.7´|unm:'dgonzalez|tsp:'1666572634'|
+
+
+
+IP:180.79.179.146 - Repetido: 5 veces
+UNM: ccelys - Repetido: 13 veces
+UNM: lalminio - Repetido: 12 veces
